@@ -2,25 +2,74 @@ require 'spec_helper'
 
 
 #####Rubyに必要なパッケージがインストールされているか確認#####
-%w{ git gcc-c++ make patch curl libcurl-devel libffi-devel libyaml-devel libicu-devel libxml2-devel libxslt-devel nginx mysql-community-client }.each do |pkg|
-  describe package(pkg) do
-    it { should be_installed }
-  end
+describe package('git'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
 end   
 
-%w{ rails bundler }.each do |pkg|
-  describe package(pkg) do
-    it { should be_installed.by('gem') }
-  end
+describe package('gcc-c++'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('make'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('patch'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('curl'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('libcurl-devel'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('libffi-devel'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('libyaml-devel'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('libicu-devel'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('libxml2-devel'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+describe package('libxslt-devel'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
+#####Nginx,Rails,bundler,mysqlクライアントがインストールされているか、起動しているか確認#####
+describe package('nginx'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
 end
 
+describe package('rails'), :if => os[:family] == 'amazon' do
+  it { should be_installed.by('gem').with_version('6.0.4.1') }
+end
+
+describe package('bundler'), :if => os[:family] == 'amazon' do
+  it { should be_installed.by('gem') }
+end
+
+describe package('mysql-community-client'), :if => os[:family] == 'amazon' do
+  it { should be_installed }
+end   
+
 #####指定したサービスが起動しているか確認#####
-describe service('nginx') do
+describe service('nginx'), :if => os[:family] == 'amazon' do
   it { should be_enabled }
   it { should be_running }
 end
 
-describe service('sshd') do
+describe service('sshd'), :if => os[:family] == 'amazon' do
   it { should be_enabled }
   it { should be_running }
 end
@@ -33,6 +82,10 @@ describe process('nginx') do
 #####指定したコマンドの実行が正常に行われているか確認#####
 describe command('ruby -v') do
   its(:stdout) { should match /ruby 2\.6\.3/ }
+end
+
+describe command('rails -v') do
+  its(:stdout) { should match /Rails 6\.0\.4\.1/ }
 end
 
 describe command('rails -v') do
